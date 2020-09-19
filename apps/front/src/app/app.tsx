@@ -1,27 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Message } from '@aila/api-interfaces';
+import React from 'react';
 
-export const App = () => {
-  const [m, setMessage] = useState<Message>({ message: '' });
-
-  useEffect(() => {
-    fetch('/api')
-      .then((r) => r.json())
-      .then(setMessage);
-  }, []);
-
-  return (
-    <>
-      <div style={{ textAlign: 'center' }}>
-        <h1>Welcome to front!</h1>
-        <img
-          width="450"
-          src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png"
-        />
-      </div>
-      <div>{m.message}</div>
-    </>
-  );
-};
+export const App = () => (
+  <div>
+    <h1>Welcome to front!</h1>
+  </div>
+);
 
 export default App;
