@@ -15,6 +15,18 @@ const app = express();
 app.use(morgan('tiny'));
 app.use(bodyParser.json());
 
+app.get('/cuisine-types', async (_, res) => {
+  try {
+    const restaurants: Restaurant[] = await restaurantCollection.find();
+    const cuisineTypes: CuisineType[] = [
+      ...new Set(restaurants.map(({ cuisineType }) => cuisineType)),
+    ].sort((a, b) => a.localeCompare(b));
+    res.json(cuisineTypes);
+  } catch (err) {
+    res.status(500).json({ message: 'Unable to fetch cuisine types.' });
+  }
+});
+
 app.get('/restaurants', async (_, res) => {
   try {
     const restaurants: Restaurant[] = await restaurantCollection.find();
@@ -69,11 +81,9 @@ app.put('/restaurants/:restaurantId', async (req, res) => {
       { $push: { datesOrdered: new Date() } }
     );
     if (!updatedRestaurant) {
-      return res
-        .status(404)
-        .json({
-          message: `Unable to find selected restaurantId: ${restaurantId} to update`,
-        });
+      return res.status(404).json({
+        message: `Unable to find selected restaurantId: ${restaurantId} to update`,
+      });
     }
     res.json(updatedRestaurant);
   } catch (err) {
