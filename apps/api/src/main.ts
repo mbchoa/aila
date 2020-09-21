@@ -3,41 +3,55 @@ import * as express from 'express';
 import monk, { ICollection, IMonkManager } from 'monk';
 import morgan from 'morgan';
 
-import { CuisineRecord, CuisineType } from '@aila/api-interfaces';
+import { CuisineType, Restaurant } from '@aila/api-interfaces';
 
 // Connect MongoDB
 const db: IMonkManager = monk(process.env.MONGODB_URI);
-const cuisineRecords: ICollection = db.get('cuisine-records');
-cuisineRecords.createIndex({ cuisineType: 1 }, { unique: true });
+const restaurantCollection: ICollection = db.get('restaurants');
+restaurantCollection.createIndex({ name: 1 }, { unique: true });
 
 // App
 const app = express();
 app.use(morgan('tiny'));
 app.use(bodyParser.json());
 
-app.get('/cuisines', async (_, res) => {
+app.get('/restaurants', async (_, res) => {
   try {
-    const records: CuisineRecord[] = await cuisineRecords.find();
-    res.json(records);
+    const restaurants: Restaurant[] = await restaurantCollection.find();
+    res.json(restaurants);
   } catch (err) {
-    res.status(500);
+    res.status(500).json({ message: 'Unable to fetch restaurants.' });
   }
 });
 
-app.post('/cuisines/rank', async (req, res) => {
+app.post('/restaurants/rank', async (req, res) => {
   // get cuisines selected from body
   const selectedCuisines: CuisineType[] = req.body;
 
   try {
-    // look up last eaten timestamps for each cuisine
-    const records: CuisineRecord[] = await cuisineRecords.find({ cuisineType: { $in: selectedCuisines } }, { raw: false });
-    if (records.length === 0) {
-      return res.status(400).json({ message: 'Cuisine types provided not found' });
+    // find restaurants that match the selected cuisine types
+    const restaurants: Restaurant[] = await restaurantCollection.find(
+      { cuisineType: { $in: selectedCuisines } },
+      { raw: false }
+    );
+    if (restaurants.length === 0) {
+      return res
+        .status(400)
+        .json({ message: 'Cuisine types provided not found' });
     }
 
-    // send sorted cuisine records by lastEatenTimeStamp
-    const rankedRecords: CuisineRecord[] = records.sort((a, b) => a.lastEatenTimeStamp.getTime() - b.lastEatenTimeStamp.getTime());
-    res.json(rankedRecords);
+    // send sorted restaurants by least recently ordered from
+    const rankedRestaurants: Restaurant[] = restaurants.sort((a, b) => {
+      const prevDate: Date = new Date(
+        a.datesOrdered[a.datesOrdered.length - 1]
+      );
+      const nextDate: Date = new Date(
+        b.datesOrdered[b.datesOrdered.length - 1]
+      );
+      return prevDate.getTime() - nextDate.getTime();
+    });
+
+    res.json(rankedRestaurants);
   } catch (err) {
     res.status(500).json({
       message: 'Fatal error encountered. Unable to rank selected cuisines',
@@ -46,16 +60,26 @@ app.post('/cuisines/rank', async (req, res) => {
   }
 });
 
-app.post('/cuisines/select', async (req, res) => {
-  const { cuisine } = req.body;
+app.put('/restaurants/:restaurantId', async (req, res) => {
+  const { restaurantId } = req.params;
+
   try {
-    const updatedRecord: CuisineRecord = await cuisineRecords.findOneAndUpdate({ cuisineType: cuisine }, { $set: { lastEatenTimeStamp: new Date() } });
-    if (!updatedRecord) {
-      return res.status(404).json({ message: `Unable to find selected cuisine: ${cuisine}` });      
+    const updatedRestaurant: Restaurant = await restaurantCollection.findOneAndUpdate(
+      { _id: restaurantId },
+      { $push: { datesOrdered: new Date() } }
+    );
+    if (!updatedRestaurant) {
+      return res
+        .status(404)
+        .json({
+          message: `Unable to find selected restaurantId: ${restaurantId} to update`,
+        });
     }
-    res.json(updatedRecord);
+    res.json(updatedRestaurant);
   } catch (err) {
-    res.status(500).json({ message: 'Fatal error encountered. Unable to update selected cuisine'});
+    res.status(500).json({
+      message: 'Fatal error encountered. Unable to update selected restaurant',
+    });
   }
 });
 

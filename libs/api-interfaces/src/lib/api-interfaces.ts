@@ -1,22 +1,25 @@
 export enum CuisineType {
-  'American BBQ' = 'american-bbq',
-  'American Brunch' = 'american-brunch',
-  'American Burger' = 'american-burger',
-  'American Fried Chicken' = 'american-fried-chicken',
-  'American Sandwiches' = 'american-sandwiches',
+  American = 'american',
+  BBQ = 'bbq',
+  Boba = 'boba',
   Brazilian = 'brazilian',
+  Brunch = 'brunch',
+  Burger = 'burger',
   Chinese = 'chinese',
-  Greek = 'greek',
+  FriedChicken = 'fried-chicken',
+  Healthy = 'healthy',
   Indian = 'indian',
   Indonesian = 'indonesian',
-  'Italian Pizza' = 'italian-pizza',
-  'Italian Pasta' = 'italian-pasta',
   Jamaican = 'jamaican',
-  'Japanese Sushi' = 'japanese-sushi',
-  'Japanese Ramen' = 'japanese-ramen',
+  Japanese = 'japanese',
   Korean = 'korean',
+  Mediterranean = 'mediterranean',
   Mexican = 'mexican',
+  Pasta = 'pasta',
+  Pastries = 'pastries',
   Peruvian = 'peruvian',
+  Pizza = 'pizza',
+  Sandwiches = 'sandwiches',
   Thai = 'thai',
   Vietnamese = 'vietnamese',
 };
@@ -29,12 +32,7 @@ export enum CuisineTag {
 export interface Restaurant {
   _id: string,
   name: string,
-}
-
-export interface CuisineRecord {
-  _id: string,
   cuisineType: CuisineType,
-  lastEatenTimeStamp: Date,
-  restaurants: Restaurant[],
+  datesOrdered: string[],
   tags: CuisineTag[],
-};
+}
