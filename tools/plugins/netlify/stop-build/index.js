@@ -1,22 +1,20 @@
-function projectChanged(currentProject, fromHash, toHash) {
+function projectChanged(fromHash, toHash) {
   const execSync = require('child_process').execSync;
-  const getAffected = `npm run --silent nx print-affected --base=${fromHash} --head=${toHash}`;
+  const getAffected = `npx nx print-affected --base=${fromHash} --head=${toHash}`;
   const output = execSync(getAffected).toString();
 
   // get list of changed projects from the output
   const changedProjects = JSON.parse(output).projects;
-  return !!changedProjects.find(project => project === currentProject)
+  return changedProjects.length > 0;
 }
 
 module.exports = {
   onPreBuild: ({ utils }) => {
-    const currentProject = process.env.PROJECT_NAME;
-    console.log(`Checking if project: "${currentProject}" has changed.`)
+    console.log(`Checking if any projects have changed.`)
 
     const lastDeployedCommit = process.env.CACHED_COMMIT_REF;
     const latestCommit = 'HEAD';
     const hasProjectChanged = projectChanged(
-      currentProject,
       lastDeployedCommit,
       latestCommit
     );
