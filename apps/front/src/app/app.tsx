@@ -1,14 +1,14 @@
 import React from 'react';
-import { useRecoilState } from 'recoil';
+import { useAtom } from 'jotai';
 
-import { stepState } from './atoms';
+import { stepAtom } from './atoms';
 import { Step } from './types';
 
 import Wizard from './components/Wizard';
 import WizardStep from './components/Wizard/Step';
 
 export const App: React.FunctionComponent = () => {
-  const [stepIndex, setStepIndex] = useRecoilState(stepState);
+  const [stepIndex, setStepIndex] = useAtom(stepAtom);
 
   const handleNextClick = (step) => () => {
     setStepIndex(step);

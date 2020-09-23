@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
 import { Step } from './types';
 
-export const stepState = atom({
-  key: 'stepState',
-  default: Step.AsianOrNonAsian,
-});
+export const stepAtom = atom(Step.AsianOrNonAsian);
