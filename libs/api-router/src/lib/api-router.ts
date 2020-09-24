@@ -10,10 +10,8 @@ const db: IMonkManager = monk(process.env.MONGODB_URI);
 const restaurantCollection: ICollection = db.get('restaurants');
 restaurantCollection.createIndex({ name: 1 }, { unique: true });
 
-// App
-const router = express();
-router.use(morgan('tiny'));
-router.use(bodyParser.json());
+// Router
+const router = express.Router();
 
 router.get('/cuisine-types', async (_, res) => {
   try {
@@ -93,4 +91,9 @@ router.put('/restaurants/:restaurantId', async (req, res) => {
   }
 });
 
-export { router };
+const app = express();
+app.use(morgan('tiny'));
+app.use(bodyParser.json());
+app.use('/.netlify/functions/main', router);
+
+export { app };
