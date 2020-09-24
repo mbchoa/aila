@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@aila/api-interfaces": ["libs/api-interfaces/src/index.ts"]
+      "@aila/api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "@aila/api-router": ["libs/api-router/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
