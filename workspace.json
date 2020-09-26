@@ -211,6 +211,61 @@
           }
         }
       }
+    },
+    "lambda": {
+      "root": "apps/lambda",
+      "sourceRoot": "apps/lambda/src",
+      "projectType": "application",
+      "prefix": "lambda",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/lambda",
+            "main": "apps/lambda/src/main.ts",
+            "tsConfig": "apps/lambda/tsconfig.app.json",
+            "assets": ["apps/lambda/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/lambda/src/environments/environment.ts",
+                  "with": "apps/lambda/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "lambda:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "apps/lambda/tsconfig.app.json",
+              "apps/lambda/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/lambda/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/lambda/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

@@ -4,9 +4,10 @@
   "license": "MIT",
   "scripts": {
     "nx": "nx",
-    "start": "nx serve",
+    "start:front": "nx serve front",
+    "start:api": "nx serve api",
     "build": "nx build",
-    "build:apps": "nx run-many --target=build --projects=front,api --prod",
+    "build:apps": "nx run-many --target=build --projects=front,lambda --prod",
     "test": "nx test",
     "lint": "nx workspace-lint && nx lint",
     "e2e": "nx e2e",

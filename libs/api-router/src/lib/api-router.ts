@@ -94,6 +94,5 @@ router.put('/restaurants/:restaurantId', async (req, res) => {
 const app = express();
 app.use(morgan('tiny'));
 app.use(bodyParser.json());
-app.use('/.netlify/functions/main', router);
 
-export { app };
+export { app, router };
