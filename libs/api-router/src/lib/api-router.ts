@@ -3,9 +3,10 @@ import * as express from 'express';
 import * as z from 'zod';
 import monk, { ICollection, IMonkManager } from 'monk';
 import morgan from 'morgan';
-import { CuisineType, Restaurant } from '@aila/api-interfaces';
+import { CuisineTag, CuisineType, Restaurant } from '@aila/api-interfaces';
 
 import * as schemas from './schemas';
+import * as helpers from './helpers';
 
 // Connect MongoDB
 const db: IMonkManager = monk(process.env.MONGODB_URI as string);
@@ -30,9 +31,15 @@ router.get('/cuisine-types', async (_, res) => {
   }
 });
 
-router.get('/restaurants', async (_, res) => {
+router.get('/restaurants', async (req, res) => {
+  const requestedTags: CuisineTag[] = req.query?.tags?.length
+    ? helpers.parseCuisineTags(req.query.tags as string)
+    : [];
+
   try {
-    const restaurants: Restaurant[] = await restaurantCollection.find();
+    const restaurants: Restaurant[] = (requestedTags.length > 0)
+      ? await restaurantCollection.find({ tags: { $all: requestedTags }}, { raw: false })
+      : await restaurantCollection.find();
     res.json(restaurants);
   } catch (err) {
     res.status(500).json({
