@@ -39,7 +39,8 @@
     "react-dom": "16.13.1",
     "react-is": "16.13.1",
     "serverless-http": "^2.6.0",
-    "styled-components": "5.1.1"
+    "styled-components": "5.1.1",
+    "zod": "^1.11.9"
   },
   "devDependencies": {
     "@babel/core": "7.9.6",

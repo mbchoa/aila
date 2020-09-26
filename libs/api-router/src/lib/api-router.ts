@@ -1,12 +1,14 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
+import * as z from 'zod';
 import monk, { ICollection, IMonkManager } from 'monk';
 import morgan from 'morgan';
-
 import { CuisineType, Restaurant } from '@aila/api-interfaces';
 
+import * as schemas from './schemas';
+
 // Connect MongoDB
-const db: IMonkManager = monk(process.env.MONGODB_URI);
+const db: IMonkManager = monk(process.env.MONGODB_URI as string);
 const restaurantCollection: ICollection = db.get('restaurants');
 restaurantCollection.createIndex({ name: 1 }, { unique: true });
 
@@ -21,7 +23,10 @@ router.get('/cuisine-types', async (_, res) => {
     ].sort((a, b) => a.localeCompare(b));
     res.json(cuisineTypes);
   } catch (err) {
-    res.status(500).json({ message: 'Unable to fetch cuisine types.' });
+    res.status(500).json({
+      message: 'Unable to fetch cuisine types.',
+      error: err.message,
+    });
   }
 });
 
@@ -30,7 +35,31 @@ router.get('/restaurants', async (_, res) => {
     const restaurants: Restaurant[] = await restaurantCollection.find();
     res.json(restaurants);
   } catch (err) {
-    res.status(500).json({ message: 'Unable to fetch restaurants.' });
+    res.status(500).json({
+      message: 'Unable to fetch restaurants.',
+      error: err.message,
+    });
+  }
+});
+
+router.post('/restaurants', async (req, res) => {
+  try {
+    // validate request body
+    const { cuisineType, name, tags } = schemas.addRestaurantSchema.parse(req.body)
+
+    // insert restaurant document with data
+    const restaurant: Restaurant = await restaurantCollection.insert({
+      cuisineType, datesOrdered: [], name, tags
+    });
+    if (!restaurant) {
+      throw new Error('Failed to insert restaurant into database');
+    }
+    res.json(restaurant);
+  } catch (err) {
+    res.status(500).json({
+      message: 'Fatal error encountered. Unable to create new restaurant',
+      error: err.message,
+    });
   }
 });
 
@@ -65,7 +94,7 @@ router.post('/restaurants/rank', async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: 'Fatal error encountered. Unable to rank selected cuisines',
-      error: err,
+      error: err.message,
     });
   }
 });
@@ -87,6 +116,7 @@ router.put('/restaurants/:restaurantId', async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: 'Fatal error encountered. Unable to update selected restaurant',
+      error: err.message,
     });
   }
 });
