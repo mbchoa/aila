@@ -1,4 +1,4 @@
-# aila
+# aila [![Netlify Status](https://api.netlify.com/api/v1/badges/87481feb-aed2-4661-851f-0f589c7f90ba/deploy-status)](https://app.netlify.com/sites/yanyan/deploys)
 
 Personal food recommendation assistant.
 
