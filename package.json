@@ -30,11 +30,13 @@
   "private": true,
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "document-register-element": "1.13.1",
     "express": "4.17.1",
     "jotai": "^0.7.1",
     "monk": "^7.3.2",
     "morgan": "^1.10.0",
+    "qs": "^6.9.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-is": "16.13.1",

@@ -4,7 +4,7 @@ type Props = {
   stepIndex: number;
 };
 
-const Wizard: React.FunctionComponent<Props> = ({ children, stepIndex }) => (
+const Wizard: React.FC<Props> = ({ children, stepIndex }) => (
   <div>{React.Children.toArray(children)[stepIndex]}</div>
 );
 

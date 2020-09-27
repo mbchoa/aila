@@ -1,9 +1,15 @@
 import React from 'react';
 
-const Step: React.FunctionComponent = ({ children }) => (
-  <div>
+type Props = {
+  headerText: string,
+  onSubmit: (e: React.FormEvent) => void,
+};
+
+const Step: React.FC<Props> = ({ children, headerText, onSubmit }) => (
+  <form onSubmit={onSubmit}>
+    <h2>{headerText}</h2>
     {children}
-  </div>
+  </form>
 );
 
 export default Step;
