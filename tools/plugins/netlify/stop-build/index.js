@@ -20,7 +20,7 @@ module.exports = {
     );
     if (!hasProjectChanged) {
       utils.build.cancelBuild(
-        `Build was cancelled because ${currentProject} was not affected by the latest changes.`
+        `Build was cancelled because there were no changes.`
       );
     }
   },
