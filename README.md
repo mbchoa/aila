@@ -8,10 +8,11 @@ Personal food recommendation assistant.
 
 1. Are you looking for a snack or full meal?
 2. Are you craving Asian or non-Asian?
+3. Which cuisine types are you interested in?
 
 ### Selection Criteria
 
-* Rank cuisines by least recently used
+* Rank cuisine types sleected by least recently ordered
 
 ### Cuisines
 
