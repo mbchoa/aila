@@ -1,6 +1,5 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import * as z from 'zod';
 import monk, { ICollection, IMonkManager } from 'monk';
 import morgan from 'morgan';
 import { CuisineTag, CuisineType, Restaurant } from '@aila/api-interfaces';

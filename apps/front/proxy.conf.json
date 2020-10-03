@@ -1,6 +1,9 @@
 {
-  "/": {
+  "/.netlify/functions/main": {
     "target": "http://localhost:3333",
-    "secure": false
+    "secure": false,
+    "pathRewrite": {
+      "^/.netlify/functions/main": "/"
+    }
   }
 }
