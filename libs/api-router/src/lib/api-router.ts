@@ -36,9 +36,12 @@ router.get('/restaurants', async (req, res) => {
     : [];
 
   try {
-    const restaurants: Restaurant[] = (requestedTags.length > 0)
-      ? await restaurantCollection.find({ tags: { $all: requestedTags }}, { raw: false })
-      : await restaurantCollection.find();
+    if (requestedTags.length === 0 || requestedTags.includes(CuisineTag.NoPreference)) {
+      const restaurants: Restaurant[] = await restaurantCollection.find();
+      return res.json(restaurants);
+    }
+
+    const restaurants: Restaurant[] = await restaurantCollection.find({ tags: { $all: requestedTags }}, { raw: false });
     res.json(restaurants);
   } catch (err) {
     res.status(500).json({

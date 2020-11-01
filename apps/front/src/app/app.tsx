@@ -58,11 +58,13 @@ export const App: React.FC = () => {
       </header>
       <main>
         <Wizard stepIndex={stepIndex}>
-          <WizardStep headerText="Asian / Non-Asian" onSubmit={handleSubmitTag}>
+          <WizardStep headerText="Asian / Non-Asian / No Preference" onSubmit={handleSubmitTag}>
             <input type="radio" id="asian" name="tag" onChange={handleRadioChange} value={CuisineTag.Asian} />
             <label htmlFor="asian">Asian</label>
             <input type="radio" id="non-asian" name="tag" onChange={handleRadioChange} value={CuisineTag.NonAsian} />
             <label htmlFor="non-asian">Non-Asian</label>
+            <input type="radio" id="no-pref" name="tag" onChange={handleRadioChange} value={CuisineTag.NoPreference} />
+            <label htmlFor="non-asian">No Preference</label>
             <button type="submit">Next</button>
           </WizardStep>
           <WizardStep headerText="What are you craving?" onSubmit={handleSubmitSelectedCuisines}>

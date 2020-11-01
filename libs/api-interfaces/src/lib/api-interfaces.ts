@@ -27,6 +27,7 @@ export enum CuisineType {
 export enum CuisineTag {
   Asian = 'asian',
   NonAsian = 'non-asian',
+  NoPreference = 'no-pref',
 };
 
 export interface Restaurant {
