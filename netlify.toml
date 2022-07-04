@@ -1,5 +1,2 @@
  [build]
  functions = "/dist/apps/lambda"
-
- [[plugins]]
- package = "/tools/plugins/netlify/stop-build"
